@@ -22,7 +22,8 @@ KeyUp and KeyDown images must be defined in the MediaItems section
     <MediaItem id=\"1\" filePath=\"C:\\Users\\Art\\Downloads\\key up.jpg\"
     <MediaItem id=\"2\" filePath=\"C:\\Users\\Art\\Downloads\\key down.jpg\"
 
-Audio files for Morse code must be at a speed of 12wpm with the following timingand the various pauses:
+Audio files can be created using various apps that translate text into Morse.
+These files for Morse code should be at a speed of 12wpm with the following timing and various pauses:
 Dit: 1 unit
 Dah: 3 units
 Intra-character space (the gap between dits and dahs within a character): 1 unit
