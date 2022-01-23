@@ -1,7 +1,10 @@
 # CWGen
-Create animated images for use with Windows Live Movie Maker
-
+Create animated images for use with Windows Movie Maker
 Shell script to generate XML animated code key for use with Windows Movie Maker
+
+*Note: Windows Movie Maker is a discontinued video editing software program
+ by Microsoft. It was a part of Windows Essentials software suite and offered
+ the ability to create and edit videos.
 
 Usage: cwgen < Morse code characters >
 
