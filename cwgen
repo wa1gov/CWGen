@@ -77,7 +77,6 @@ Translate()
         ".") echo -n ".-.-.- " >> cwgen.code ;;
         "=") echo -n ".-..-. " >> cwgen.code ;;
         "'") echo -n ".----. " >> cwgen.code ;;
-        "/")  echo -n "-..-. " >> cwgen.code ;;
         *) ;;
     esac
 }
