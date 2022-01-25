@@ -6,15 +6,15 @@ Shell script to generate XML animated code key for use with Windows Movie Maker
  by Microsoft. It was a part of Windows Essentials software suite and offered
  the ability to create and edit videos.
 
-Usage: cwgen < Morse code characters >
+Usage: cwgen < Morse code characters > | < Text characters >
 
 Examples:
-Use / for word space in both cases
+Use / for word space
 cwgen "-.-. --.- / -.. . / .-- .- .---- --. --- ...-" > cq.wlmp
 Output XML, redirect to .wlmp file for input to the WMM app.
-Output will also be decoded in the file cwgen.decode
+Output will also be decoded in the file cwgen.decoded
 Or:
-cwgen "C Q / D E / W A 1 G O V" > cq.wlmp
+cwgen "CQ DE WA1GOV" > cq.wlmp
 Output will be Morse code in the file cwgen.code
 
 Examples of the final product can be found on YouTube

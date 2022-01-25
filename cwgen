@@ -1,20 +1,20 @@
 #!/bin/bash
 # Script to generate XML animated code key for use with Windows Movie Maker
-# Usage: cwgen < Morse code characters >
+# Usage: cwgen < Morse code characters > | < Text characters >
 # Examples: 
-# Use / for word space in both cases
+# Use / for word space
 # cwgen "-.-. --.- / -.. . / .-- .- .---- --. --- ...-"
 # Output XML, redirect to .wlmp file for input to the WMM app.
-# Output will also be decoded in the file cwgen.decode
+# Output will also be decoded in the file cwgen.decoded
 # Or:
-# cwgen "C Q / D E / W A 1 G O V"
+# cwgen "CQ DE WA1GOV"
 # Output will be Morse code in the file cwgen.code
 #
 if [ -z "$1" ]
 then
     echo "Usage: $0 < Morse code characters >"
     echo "Example: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\""
-    echo "         cwgen \"C Q / D E / W A 1 G O V\""
+    echo "         cwgen \"CQ DE WA1GOV\""
     exit
 fi
 KeyUp() 
@@ -749,9 +749,21 @@ if [[ "${CODEA[0]}" =~ ^[[:alnum:]] ]]
 then
     for i in `seq 0 $LEN`
     do
-        Translate
-        CODEA[$i]=`awk '{print $NF}' cwgen.code`
-        Decode
+        SUBTEXT=`echo ${CODEA[$i]} | grep -o .`
+        for x in `echo $SUBTEXT`
+        do
+            CODEA[$i]=$x
+            Translate
+            CODEA[$i]=`awk '{print $NF}' ./cwgen.code`
+            Decode
+        done
+        if [ $i -ne $LEN ]
+        then
+            CODEA[$i]="/"
+            Translate
+            CODEA[$i]=`awk '{print $NF}' ./cwgen.code`
+            Decode
+        fi
     done
 else
     for i in `seq 0 $LEN`
