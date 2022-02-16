@@ -1,7 +1,8 @@
 # CWGen
 
 Shell script to generate XML animated images for use with Windows Movie Maker
-*Now updated with wav file creation using github.com/cardre/morsewav.py
+*Now updated with wav file creation using:
+https://github.com/cardre/morsewav.py
 
 *Note: Windows Movie Maker is a discontinued video editing software program
  by Microsoft. It was a part of Windows Essentials software suite and offered
