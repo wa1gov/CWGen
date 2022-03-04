@@ -38,8 +38,15 @@ Textit()
     echo -n "
     <TitleClip extentID=\"$extID\" gapBefore=\"$GAP\" duration=\"2\">"
     echo -n "$TextTop"
+    if [ `cat $HOME/cwgen.decoded | wc -c` -gt 25 ]
+    then
+        MSG=`cut -c${CH}- $HOME/cwgen.decoded` 
+        CH=$(($CH + 1))
+    else
+        MSG=`cat $HOME/cwgen.decoded`
+    fi
     echo -n " 
-             <BoundPropertyStringElement Value=\"`cat $HOME/cwgen.decoded`\" />"
+             <BoundPropertyStringElement Value=\"$MSG\" />"
     echo -n "$TextBot"
     echo "$extID" >> $HOME/cwgen.TextID
     extID=$(($extID + 1))
@@ -744,6 +751,7 @@ media=1
 extID=5
 dur=1
 GAP=0
+CH=2
 Ibod="
       <Effects />
       <Transitions />
@@ -781,8 +789,8 @@ TextTop="
             </BoundPropertyFloatSet>
             <BoundPropertyInt Name=\"outlineSizeIndex\" Value=\"0\" />
             <BoundPropertyFloatSet Name=\"position\">
-              <BoundPropertyFloatElement Value=\"2.5\" />
-              <BoundPropertyFloatElement Value=\"-2.1\" />
+              <BoundPropertyFloatElement Value=\"4.6\" />
+              <BoundPropertyFloatElement Value=\"2.6\" />
               <BoundPropertyFloatElement Value=\"0.025\" />
             </BoundPropertyFloatSet>
             <BoundPropertyFloat Name=\"size\" Value=\"0.46\" />
