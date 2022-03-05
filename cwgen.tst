@@ -10,13 +10,6 @@
 # cwgen "CQ DE WA1GOV"
 # Output will be Morse code in the file cwgen.code
 #
-if [ -z "$1" ]
-then
-    echo "Usage: $0 < Morse code characters >"
-    echo "Example: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\""
-    echo "         cwgen \"CQ DE WA1GOV\""
-    exit
-fi
 KeyUp() 
 {
     echo -n "
@@ -735,6 +728,16 @@ Decode()
     esac
 }
 #
+# check usage
+#
+if [ -z "$1" ]
+then
+    echo "Usage: $0 < Morse code characters >"
+    echo "Example: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
+    echo "         cwgen \"CQ DE WA1GOV\" > cq.wlmp"
+    exit
+fi
+#
 # variable assignments
 #
 if [ "$1" = "-t" ]
@@ -837,6 +840,8 @@ fi
     echo -n "
   </MediaItems>
   <Extents>"
+# Generic middle code
+#
 if [[ "${CODEA[0]}" =~ ^[[:alnum:]] ]]
 then
     for i in `seq 0 $LEN`
@@ -873,8 +878,6 @@ else
 	fi
     done
 fi
-# Generic middle code
-#
 KeyUp
 # Generate Audio extent
 #
