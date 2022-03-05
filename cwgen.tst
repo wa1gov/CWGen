@@ -750,6 +750,10 @@ LEN=$((${#CODEA[@]} - 1))
 media=1
 extID=5
 dur=1
+if [ -d ./morsewav.py ]
+then
+    AUDIO=1
+fi
 GAP=0
 CH=2
 Ibod="
@@ -817,13 +821,6 @@ TextBot="
 cp /dev/null cwgen.decoded
 cp /dev/null cwgen.code
 cp /dev/null cwgen.TextID
-if [[ "${CODEA[0]}" =~ ^[[:alnum:]] ]]
-then
-    if [ -d ./morsewav.py ]
-    then
-        ./morsewav.py/morsewav.py -o cwgen.wav -f 550 -w 12 -l 25 `echo $CODE`
-	AUDIO=1
-    fi
 #
 # Start with header
 #
@@ -840,6 +837,8 @@ fi
     echo -n "
   </MediaItems>
   <Extents>"
+if [[ "${CODEA[0]}" =~ ^[[:alnum:]] ]]
+then
     for i in `seq 0 $LEN`
     do
         SUBTEXT=`echo ${CODEA[$i]} | grep -o .`
@@ -867,6 +866,11 @@ else
     for i in `seq 0 $LEN`
     do
         Decode
+	if [ $TEXT -eq 1 ]
+	then
+            Textit
+	    GAP=-2
+	fi
     done
 fi
 # Generic middle code
@@ -926,6 +930,10 @@ then
 else
     echo -n "
       <ExtentRefs />"
+fi
+if [ $AUDIO -eq 1 ]
+then
+    ./morsewav.py/morsewav.py -o cwgen.wav -f 550 -w 12 -l 25 `cat $HOME/cwgen.decoded`
 fi
 echo -n "
     </ExtentSelector>
