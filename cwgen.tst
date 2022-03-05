@@ -732,9 +732,10 @@ Decode()
 #
 if [ -z "$1" ]
 then
-    echo "Usage: $0 < Morse code characters >"
-    echo "Example: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
-    echo "         cwgen \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "Usage: $0 [ -t (text marquee) ] < Morse code characters >"
+    echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
+    echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "          cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
     exit
 fi
 #
