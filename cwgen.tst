@@ -10,6 +10,21 @@
 # cwgen "CQ DE WA1GOV"
 # Output will be Morse code in the file cwgen.code
 #
+usage()
+{
+    echo "Usage: $0 < Morse code characters >"
+    echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
+    echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "Text marquee options:"
+    echo "    -t     display text with default options (/top /left)"
+    echo "    -top   display text on top"
+    echo "    -bot   display text on bottom"
+    echo "    -right display text on right edge"
+    echo "    -left  display text in center"
+    echo "    -h     display this help"
+    echo "Examples: cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "          cwgen -bot -right \"CQ DE WA1GOV\" > cq.wlmp"
+}
 KeyUp() 
 {
     echo -n "
@@ -730,25 +745,63 @@ Decode()
 #
 # check usage
 #
-if [ -z "$1" ]
+if [ $# -eq 0 ]
 then
-    echo "Usage: $0 [ -t (text marquee) ] < Morse code characters >"
-    echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
-    echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
-    echo "          cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
+    usage
     exit
 fi
 #
 # variable assignments
 #
-if [ "$1" = "-t" ]
-then
-    TEXT=1
-    shift
-else
-    TEXT=0
-fi
-CODE="$1"
+TEXT=0
+TextVert=2.6
+TextHor=0
+#
+# check args
+#
+while [[ $# -gt 0 ]]
+    do
+        case $1 in
+	-top)
+                TextVert=2.6
+                TEXT=1
+                shift
+                ;;
+        -bot)
+                TextVert=-2.0
+                TEXT=1
+                shift
+                ;;
+        -t)
+                TEXT=1 #default values
+                shift
+                ;;
+        -h)
+                usage
+                exit
+                ;;
+        -right)
+                TextHor=4.6
+                TEXT=1
+                shift
+                ;;
+        -left)
+                TextHor=0
+                TEXT=1
+                shift
+                ;;
+        *)
+		if [ $# -eq 1 ]
+		then
+                    CODE="$1"
+                    shift
+                    shift
+	        else
+		    shift
+	        fi
+                ;;
+        esac
+done
 CODEA=($CODE)      #create array
 LEN=$((${#CODEA[@]} - 1))
 media=1
@@ -759,7 +812,7 @@ then
     AUDIO=1
 fi
 GAP=0
-CH=2
+CH=2 # cut characters > 25 for text marqee 
 Ibod="
       <Effects />
       <Transitions />
@@ -797,9 +850,9 @@ TextTop="
             </BoundPropertyFloatSet>
             <BoundPropertyInt Name=\"outlineSizeIndex\" Value=\"0\" />
             <BoundPropertyFloatSet Name=\"position\">
-              <BoundPropertyFloatElement Value=\"4.6\" />
-              <BoundPropertyFloatElement Value=\"2.6\" />
-              <BoundPropertyFloatElement Value=\"0.025\" />
+              <BoundPropertyFloatElement Value=\"$TextHor\" />
+              <BoundPropertyFloatElement Value=\"$TextVert\" />
+              <BoundPropertyFloatElement Value=\".025\" />
             </BoundPropertyFloatSet>
             <BoundPropertyFloat Name=\"size\" Value=\"0.46\" />
             <BoundPropertyStringSet Name=\"string\">"
