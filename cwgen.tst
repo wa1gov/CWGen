@@ -16,7 +16,7 @@ usage()
     echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
     echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
     echo "Text marquee options:"
-    echo "    -t     display text with default options (/top /left)"
+    echo "    -t     display text with default options (-top -left)"
     echo "    -top   display text on top"
     echo "    -bot   display text on bottom"
     echo "    -right display text on right edge"
@@ -742,6 +742,7 @@ Decode()
               *) ;;
     esac
 }
+######################## MAIN #########################
 #
 # check usage
 #
@@ -796,7 +797,7 @@ while [[ $# -gt 0 ]]
                     CODE="$1"
                     shift
                     shift
-	        else
+	        else        #invalid args
 		    shift
 	        fi
                 ;;
