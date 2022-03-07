@@ -19,8 +19,9 @@ usage()
     echo "    -t     display text with default options (-top -left)"
     echo "    -top   display text on top"
     echo "    -bot   display text on bottom"
-    echo "    -right display text on right edge"
+    echo "    -full  display full line of text (default 25 char)"
     echo "    -left  display text in center"
+    echo "    -right display text on right edge"
     echo "    -h     display this help"
     echo "Examples: cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
     echo "          cwgen -bot -right \"CQ DE WA1GOV\" > cq.wlmp"
@@ -46,7 +47,7 @@ Textit()
     echo -n "
     <TitleClip extentID=\"$extID\" gapBefore=\"$GAP\" duration=\"2\">"
     echo -n "$TextTop"
-    if [ `cat $HOME/cwgen.decoded | wc -c` -gt 25 ]
+    if [ `cat $HOME/cwgen.decoded | wc -c` -gt $SZ ]
     then
         MSG=`cut -c${CH}- $HOME/cwgen.decoded` 
         CH=$(($CH + 1))
@@ -757,12 +758,20 @@ fi
 TEXT=0
 TextVert=2.6
 TextHor=0
+GAP=0
+CH=2 # cut characters > $SZ for text marqee 
+SZ=25
 #
 # check args
 #
 while [[ $# -gt 0 ]]
     do
         case $1 in
+	-full)
+		SZ=80
+		TEXT=1
+		shift
+		;;
 	-top)
                 TextVert=2.6
                 TEXT=1
@@ -812,8 +821,6 @@ if [ -d ./morsewav.py ]
 then
     AUDIO=1
 fi
-GAP=0
-CH=2 # cut characters > 25 for text marqee 
 Ibod="
       <Effects />
       <Transitions />
