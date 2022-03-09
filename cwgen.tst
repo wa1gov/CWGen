@@ -16,12 +16,16 @@ usage()
     echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
     echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
     echo "Text marquee options:"
-    echo "    -t     display text with default options (-top -left)"
-    echo "    -top   display text on top"
-    echo "    -bot   display text on bottom"
-    echo "    -full  display full line of text (default 25 char)"
-    echo "    -left  display text in center"
-    echo "    -right display text on right edge"
+    echo "    -t     text default options (-top -mid -half -red 25 char)"
+    echo "    -top   text on top"
+    echo "    -bot   text on bottom"
+    echo "    -full  text full 40 characters"
+    echo "    -half  text display 20 characters"
+    echo "    -mid   display text on center"
+    echo "    -right display text on right"
+    echo "    -red   red text"
+    echo "    -white white text"
+    echo "    -black black text"
     echo "    -h     display this help"
     echo "Examples: cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
     echo "          cwgen -bot -right \"CQ DE WA1GOV\" > cq.wlmp"
@@ -761,41 +765,70 @@ TextHor=0
 GAP=0
 CH=2 # cut characters > $SZ for text marqee 
 SZ=25
+CO1=1  # Red 100, Black 000, White 111
+CO2=0
+CO3=0
 #
 # check args
 #
 while [[ $# -gt 0 ]]
     do
         case $1 in
-	-full)
-		SZ=80
+	-white)                #White Text
+		CO1=1
+		CO2=1
+		CO3=1
 		TEXT=1
 		shift
 		;;
-	-top)
+	-black)                #Black Text
+		CO1=0
+		CO2=0
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	-red)                  #Red Text
+		CO1=1
+		CO2=0
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	-half)                 #Text 20 character line
+		SZ=20
+		TEXT=1
+		shift
+		;;
+	-full)                 #Text the full line
+		SZ=40
+		TEXT=1
+		shift
+		;;
+	-top)                  #Text on the top
                 TextVert=2.6
                 TEXT=1
                 shift
                 ;;
-        -bot)
+        -bot)                  #Text on the bottom
                 TextVert=-2.0
                 TEXT=1
                 shift
                 ;;
         -t)
-                TEXT=1 #default values
+		TEXT=1         #Default values (top,left)
                 shift
                 ;;
         -h)
                 usage
                 exit
                 ;;
-        -right)
+        -right)                #Start text at right edge
                 TextHor=4.6
                 TEXT=1
                 shift
                 ;;
-        -left)
+        -mid)                  #Start text in the middle
                 TextHor=0
                 TEXT=1
                 shift
@@ -806,7 +839,7 @@ while [[ $# -gt 0 ]]
                     CODE="$1"
                     shift
                     shift
-	        else        #invalid args
+	        else           #Ignore invalid args
 		    shift
 	        fi
                 ;;
@@ -834,9 +867,9 @@ TextTop="
           <BoundProperties>
             <BoundPropertyBool Name=\"automatic\" Value=\"false\" />
             <BoundPropertyFloatSet Name=\"color\">
-              <BoundPropertyFloatElement Value=\"1\" />
-              <BoundPropertyFloatElement Value=\"0\" />
-              <BoundPropertyFloatElement Value=\"0\" />
+              <BoundPropertyFloatElement Value=\"$CO1\" />
+              <BoundPropertyFloatElement Value=\"$CO2\" />
+              <BoundPropertyFloatElement Value=\"$CO3\" />
             </BoundPropertyFloatSet>
             <BoundPropertyStringSet Name=\"family\">
               <BoundPropertyStringElement Value=\"Segoe UI\" />
