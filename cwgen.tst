@@ -16,7 +16,7 @@ usage()
     echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
     echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
     echo "Text marquee options:"
-    echo "    -t     text default options (-top -mid -half -red 25 char)"
+    echo "    -t     text default options (-top -mid -red 25 char line)"
     echo "    -top   text on top"
     echo "    -bot   text on bottom"
     echo "    -full  text full 40 characters"
