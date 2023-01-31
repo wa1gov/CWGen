@@ -16,16 +16,22 @@ usage()
     echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
     echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
     echo "Text marquee options:"
-    echo "    -t     text default options (-top -mid -red 25 char line)"
+    echo "    -t     text default options (-top -mid -red 30 char line)"
     echo "    -top   text on top"
     echo "    -bot   text on bottom"
-    echo "    -full  text full 40 characters"
-    echo "    -half  text display 20 characters"
+    echo "    -half  text line 20 characters"
+    echo "    -full  text line 40 characters"
+    echo "    -ext   text line 60 characters"
+    echo "    -mini  text size mini"
+    echo "    -small text size medium"
     echo "    -mid   display text on center"
     echo "    -right display text on right"
     echo "    -red   red text"
     echo "    -white white text"
     echo "    -black black text"
+    echo "    -low   Frequency = 360hz"
+    echo "    -high  Frequency = 750hz"
+    echo "    -cup   Special CW Mug settings"
     echo "    -h     display this help"
     echo "Examples: cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
     echo "          cwgen -bot -right \"CQ DE WA1GOV\" > cq.wlmp"
@@ -106,11 +112,12 @@ Translate()
         "9")  echo -n "----. " >> cwgen.code ;;
         "?") echo -n "..--.. " >> cwgen.code ;;
         ",") echo -n "--..-- " >> cwgen.code ;;
-        "_")  echo -n "-...- " >> cwgen.code ;;
+        "-")  echo -n "-....- " >> cwgen.code ;;
         ".") echo -n ".-.-.- " >> cwgen.code ;;
-        "=") echo -n ".-..-. " >> cwgen.code ;;
+        "=") echo -n "-...- " >> cwgen.code ;;
         "'") echo -n ".----. " >> cwgen.code ;;
         "/")  echo -n "-..-. " >> cwgen.code ;;
+        "!")  echo -n "-.-.-- " >> cwgen.code ;;
         *) ;;
     esac
 }
@@ -648,7 +655,24 @@ Decode()
                 dur=3
                 KeyDown
                 ;;
-        "-...-") echo -n "BT" >> cwgen.decoded
+        "-....-") echo -n "-" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                ;;
+        "-...-") echo -n "=" >> cwgen.decoded
                 dur=3
                 KeyUp
                 KeyDown
@@ -744,6 +768,27 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "-.-.--") echo -n "!" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+                dur=3
+                KeyDown
+                ;;
               *) ;;
     esac
 }
@@ -760,12 +805,14 @@ fi
 # variable assignments
 #
 TEXT=0
-TextVert=2.6
+TextSize=0.46
+TextVert=3.0
 TextHor=0
 GAP=0
 CH=2 # cut characters > $SZ for text marqee 
-SZ=25
-CO1=1  # Red 100, Black 000, White 111
+SZ=30
+FQ=550
+CO1=1  # Red 100, Green 010, Black 000, White 111
 CO2=0
 CO3=0
 #
@@ -795,13 +842,35 @@ while [[ $# -gt 0 ]]
 		TEXT=1
 		shift
 		;;
+	-green)                #Green Text
+		CO1=0
+		CO2=1
+		CO3=0
+		TEXT=1
+		shift
+		;;
 	-half)                 #Text 20 character line
 		SZ=20
 		TEXT=1
 		shift
 		;;
-	-full)                 #Text the full line
+	-full)                 #Text 40 character line
 		SZ=40
+		TEXT=1
+		shift
+		;;
+	-ext)                  #Text 60 character line
+		SZ=60
+		TEXT=1
+		shift
+		;;
+	-mini)                 #Text size mini
+		TextSize=0.20
+		TEXT=1
+		shift
+		;;
+	-small)                #Text size small
+		TextSize=0.30
 		TEXT=1
 		shift
 		;;
@@ -811,7 +880,7 @@ while [[ $# -gt 0 ]]
                 shift
                 ;;
         -bot)                  #Text on the bottom
-                TextVert=-2.0
+                TextVert=-2.3
                 TEXT=1
                 shift
                 ;;
@@ -830,6 +899,21 @@ while [[ $# -gt 0 ]]
                 ;;
         -mid)                  #Start text in the middle
                 TextHor=0
+                TEXT=1
+                shift
+                ;;
+        -low)                  #Frequency = 360hz
+                FQ=360
+                shift
+                ;;
+        -high)                  #Frequency = 750hz
+                FQ=750
+                shift
+                ;;
+        -cup)                  
+                TextHor=-0.5
+                TextVert=1.0
+                SZ=6
                 TEXT=1
                 shift
                 ;;
@@ -895,7 +979,7 @@ TextTop="
               <BoundPropertyFloatElement Value=\"$TextVert\" />
               <BoundPropertyFloatElement Value=\".025\" />
             </BoundPropertyFloatSet>
-            <BoundPropertyFloat Name=\"size\" Value=\"0.46\" />
+            <BoundPropertyFloat Name=\"size\" Value=\"$TextSize\" />
             <BoundPropertyStringSet Name=\"string\">"
 TextBot="
             </BoundPropertyStringSet>
@@ -1031,7 +1115,7 @@ else
 fi
 if [ $AUDIO -eq 1 ]
 then
-    ./morsewav.py/morsewav.py -o cwgen.wav -f 550 -w 12 -l 25 `cat $HOME/cwgen.decoded`
+    ./morsewav.py/morsewav.py -o cwgen.wav -f $FQ -w 12 -l 25 `cat $HOME/cwgen.decoded`
 fi
 echo -n "
     </ExtentSelector>
