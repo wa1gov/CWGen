@@ -112,9 +112,9 @@ Translate()
         "9")  echo -n "----. " >> cwgen.code ;;
         "?") echo -n "..--.. " >> cwgen.code ;;
         ",") echo -n "--..-- " >> cwgen.code ;;
-        "_")  echo -n "-...- " >> cwgen.code ;;
+        "-")  echo -n "-....- " >> cwgen.code ;;
         ".") echo -n ".-.-.- " >> cwgen.code ;;
-        "=") echo -n ".-..-. " >> cwgen.code ;;
+        "=") echo -n "-...- " >> cwgen.code ;;
         "'") echo -n ".----. " >> cwgen.code ;;
         "/")  echo -n "-..-. " >> cwgen.code ;;
         "!")  echo -n "-.-.-- " >> cwgen.code ;;
@@ -655,7 +655,24 @@ Decode()
                 dur=3
                 KeyDown
                 ;;
-        "-...-") echo -n "BT" >> cwgen.decoded
+        "-....-") echo -n "-" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                ;;
+        "-...-") echo -n "=" >> cwgen.decoded
                 dur=3
                 KeyUp
                 KeyDown
@@ -711,7 +728,7 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
-        ".----.") echo -n "\'" >> cwgen.decoded
+        ".----.") echo -n "'" >> cwgen.decoded
                 dur=3
                 KeyUp
                 dur=1

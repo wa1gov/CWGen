@@ -728,7 +728,7 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
-        ".----.") echo -n "\'" >> cwgen.decoded
+        ".----.") echo -n "'" >> cwgen.decoded
                 dur=3
                 KeyUp
                 dur=1
