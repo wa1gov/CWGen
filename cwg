@@ -27,6 +27,8 @@ usage()
     echo "    -mid   display text on center"
     echo "    -right display text on right"
     echo "    -red   red text"
+    echo "    -green green text"
+    echo "    -blue  blue text"
     echo "    -white white text"
     echo "    -black black text"
     echo "    -low   Frequency = 360hz"
@@ -118,6 +120,8 @@ Translate()
         "'") echo -n ".----. " >> cwgen.code ;;
         "/")  echo -n "-..-. " >> cwgen.code ;;
         "!")  echo -n "-.-.-- " >> cwgen.code ;;
+        "(")  echo -n "-.--. " >> cwgen.code ;;
+        ":")  echo -n "---... " >> cwgen.code ;;
         *) ;;
     esac
 }
@@ -634,6 +638,26 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "---...") echo -n ":" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+		KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		;;
         "--..--") echo -n "," >> cwgen.decoded
                 dur=3
                 KeyUp
@@ -768,6 +792,24 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "-.--.") echo -n "(" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		;;
         "-.-.--") echo -n "!" >> cwgen.decoded
                 dur=3
                 KeyUp
@@ -846,6 +888,13 @@ while [[ $# -gt 0 ]]
 		CO1=0
 		CO2=1
 		CO3=0
+		TEXT=1
+		shift
+		;;
+	 -blue)                #Blue Text
+		CO1=0
+		CO2=0
+		CO3=1
 		TEXT=1
 		shift
 		;;
