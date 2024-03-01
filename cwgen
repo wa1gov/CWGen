@@ -10,18 +10,40 @@
 # cwgen "CQ DE WA1GOV"
 # Output will be Morse code in the file cwgen.code
 #
-if [ -z "$1" ]
-then
+usage()
+{
     echo "Usage: $0 < Morse code characters >"
-    echo "Example: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\""
-    echo "         cwgen \"CQ DE WA1GOV\""
-    exit
-fi
+    echo "Examples: cwgen \"-.-. --.- / -.. . / .-- .- .---- --. --- ...-\" > cq.wlmp"
+    echo "          cwgen \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "Text marquee options:"
+    echo "    -t     text default options (-top -mid -red 30 char line)"
+    echo "    -top   text on top"
+    echo "    -bot   text on bottom"
+    echo "    -half  text line 20 characters"
+    echo "    -full  text line 40 characters"
+    echo "    -ext   text line 60 characters"
+    echo "    -mini  text size mini"
+    echo "    -small text size medium"
+    echo "    -mid   display text on center"
+    echo "    -right display text on right"
+    echo "    -red   red text"
+    echo "    -green green text"
+    echo "    -blue  blue text"
+    echo "    -white white text"
+    echo "    -black black text"
+    echo "    -low   Frequency = 360hz"
+    echo "    -high  Frequency = 750hz"
+    echo "    -cup   Special CW Mug settings"
+    echo "    -h     display this help"
+    echo "Examples: cwgen -t \"CQ DE WA1GOV\" > cq.wlmp"
+    echo "          cwgen -bot -right \"CQ DE WA1GOV\" > cq.wlmp"
+}
 KeyUp() 
 {
     echo -n "
     <ImageClip extentID=\"$extID\" gapBefore=\"0\" mediaItemID=\"1\" duration=\"0.$dur\">"
     echo -n "$Ibod"
+    GAP=`echo "$GAP + 0.$dur" | bc` 
     extID=$(($extID + 1))
 }
 KeyDown()
@@ -29,6 +51,25 @@ KeyDown()
     echo -n "
     <ImageClip extentID=\"$extID\" gapBefore=\"0\" mediaItemID=\"2\" duration=\"0.$dur\">"
     echo -n "$Ibod"
+    GAP=`echo "$GAP + 0.$dur" | bc` 
+    extID=$(($extID + 1))
+}
+Textit()
+{
+    echo -n "
+    <TitleClip extentID=\"$extID\" gapBefore=\"$GAP\" duration=\"2\">"
+    echo -n "$TextTop"
+    if [ `cat $HOME/cwgen.decoded | wc -c` -gt $SZ ]
+    then
+        MSG=`cut -c${CH}- $HOME/cwgen.decoded` 
+        CH=$(($CH + 1))
+    else
+        MSG=`cat $HOME/cwgen.decoded`
+    fi
+    echo -n " 
+             <BoundPropertyStringElement Value=\"$MSG\" />"
+    echo -n "$TextBot"
+    echo "$extID" >> $HOME/cwgen.TextID
     extID=$(($extID + 1))
 }
 Translate()
@@ -73,11 +114,14 @@ Translate()
         "9")  echo -n "----. " >> cwgen.code ;;
         "?") echo -n "..--.. " >> cwgen.code ;;
         ",") echo -n "--..-- " >> cwgen.code ;;
-        "_")  echo -n "-...- " >> cwgen.code ;;
+        "-")  echo -n "-....- " >> cwgen.code ;;
         ".") echo -n ".-.-.- " >> cwgen.code ;;
-        "=") echo -n ".-..-. " >> cwgen.code ;;
+        "=") echo -n "-...- " >> cwgen.code ;;
         "'") echo -n ".----. " >> cwgen.code ;;
         "/")  echo -n "-..-. " >> cwgen.code ;;
+        "!")  echo -n "-.-.-- " >> cwgen.code ;;
+        "(")  echo -n "-.--. " >> cwgen.code ;;
+        ":")  echo -n "---... " >> cwgen.code ;;
         *) ;;
     esac
 }
@@ -594,6 +638,26 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "---...") echo -n ":" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+		KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		;;
         "--..--") echo -n "," >> cwgen.decoded
                 dur=3
                 KeyUp
@@ -615,7 +679,24 @@ Decode()
                 dur=3
                 KeyDown
                 ;;
-        "-...-") echo -n "BT" >> cwgen.decoded
+        "-....-") echo -n "-" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                ;;
+        "-...-") echo -n "=" >> cwgen.decoded
                 dur=3
                 KeyUp
                 KeyDown
@@ -671,7 +752,7 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
-        ".----.") echo -n "\'" >> cwgen.decoded
+        ".----.") echo -n "'" >> cwgen.decoded
                 dur=3
                 KeyUp
                 dur=1
@@ -711,15 +792,193 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "-.--.") echo -n "(" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		;;
+        "-.-.--") echo -n "!" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+                dur=3
+                KeyDown
+                ;;
               *) ;;
     esac
 }
+######################## MAIN #########################
+#
+# check usage
+#
+if [ $# -eq 0 ]
+then
+    usage
+    exit
+fi
 #
 # variable assignments
 #
-CODE="$1"
+TEXT=0
+TextSize=0.46
+TextVert=3.0
+TextHor=0
+GAP=0
+CH=2 # cut characters > $SZ for text marqee 
+SZ=30
+FQ=550
+CO1=1  # Red 100, Green 010, Black 000, White 111
+CO2=0
+CO3=0
+#
+# check args
+#
+while [[ $# -gt 0 ]]
+    do
+        case $1 in
+	-white)                #White Text
+		CO1=1
+		CO2=1
+		CO3=1
+		TEXT=1
+		shift
+		;;
+	-black)                #Black Text
+		CO1=0
+		CO2=0
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	-red)                  #Red Text
+		CO1=1
+		CO2=0
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	-green)                #Green Text
+		CO1=0
+		CO2=1
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	 -blue)                #Blue Text
+		CO1=0
+		CO2=0
+		CO3=1
+		TEXT=1
+		shift
+		;;
+	-half)                 #Text 20 character line
+		SZ=20
+		TEXT=1
+		shift
+		;;
+	-full)                 #Text 40 character line
+		SZ=40
+		TEXT=1
+		shift
+		;;
+	-ext)                  #Text 60 character line
+		SZ=60
+		TEXT=1
+		shift
+		;;
+	-mini)                 #Text size mini
+		TextSize=0.20
+		TEXT=1
+		shift
+		;;
+	-small)                #Text size small
+		TextSize=0.30
+		TEXT=1
+		shift
+		;;
+	-top)                  #Text on the top
+                TextVert=2.6
+                TEXT=1
+                shift
+                ;;
+        -bot)                  #Text on the bottom
+                TextVert=-2.3
+                TEXT=1
+                shift
+                ;;
+        -t)
+		TEXT=1         #Default values (top,left)
+                shift
+                ;;
+        -h)
+                usage
+                exit
+                ;;
+        -right)                #Start text at right edge
+                TextHor=4.6
+                TEXT=1
+                shift
+                ;;
+        -mid)                  #Start text in the middle
+                TextHor=0
+                TEXT=1
+                shift
+                ;;
+        -low)                  #Frequency = 360hz
+                FQ=360
+                shift
+                ;;
+        -high)                  #Frequency = 750hz
+                FQ=750
+                shift
+                ;;
+        -cup)                  
+                TextHor=-0.5
+                TextVert=1.0
+                SZ=6
+                TEXT=1
+                shift
+                ;;
+        *)
+		if [ $# -eq 1 ]
+		then
+                    CODE="$1"
+                    shift
+                    shift
+	        else           #Ignore invalid args
+		    shift
+	        fi
+                ;;
+        esac
+done
 CODEA=($CODE)      #create array
-#echo ${CODEA[@]}
 LEN=$((${#CODEA[@]} - 1))
 media=1
 extID=5
@@ -735,10 +994,64 @@ Ibod="
         <BoundPropertyInt Name=\"rotateStepNinety\" Value=\"0\" />
       </BoundProperties>
     </ImageClip>"
+TextTop="
+      <Effects>
+        <TextEffect effectTemplateID=\"TextEffectTemplate\" TextScriptId=\"0\">
+          <BoundProperties>
+            <BoundPropertyBool Name=\"automatic\" Value=\"false\" />
+            <BoundPropertyFloatSet Name=\"color\">
+              <BoundPropertyFloatElement Value=\"$CO1\" />
+              <BoundPropertyFloatElement Value=\"$CO2\" />
+              <BoundPropertyFloatElement Value=\"$CO3\" />
+            </BoundPropertyFloatSet>
+            <BoundPropertyStringSet Name=\"family\">
+              <BoundPropertyStringElement Value=\"Segoe UI\" />
+            </BoundPropertyStringSet>
+            <BoundPropertyBool Name=\"horizontal\" Value=\"true\" />
+            <BoundPropertyStringSet Name=\"justify\">
+              <BoundPropertyStringElement Value=\"MIDDLE\" />
+            </BoundPropertyStringSet>
+            <BoundPropertyBool Name=\"leftToRight\" Value=\"true\" />
+            <BoundPropertyFloatSet Name=\"length\">
+              <BoundPropertyFloatElement Value=\"4.1\" />
+              <BoundPropertyFloatElement Value=\"5.2\" />
+            </BoundPropertyFloatSet>
+            <BoundPropertyFloat Name=\"maxExtent\" Value=\"5\" />
+            <BoundPropertyFloatSet Name=\"outlineColor\">
+              <BoundPropertyFloatElement Value=\"0.65\" />
+              <BoundPropertyFloatElement Value=\"0.65\" />
+              <BoundPropertyFloatElement Value=\"0.65\" />
+            </BoundPropertyFloatSet>
+            <BoundPropertyInt Name=\"outlineSizeIndex\" Value=\"0\" />
+            <BoundPropertyFloatSet Name=\"position\">
+              <BoundPropertyFloatElement Value=\"$TextHor\" />
+              <BoundPropertyFloatElement Value=\"$TextVert\" />
+              <BoundPropertyFloatElement Value=\".025\" />
+            </BoundPropertyFloatSet>
+            <BoundPropertyFloat Name=\"size\" Value=\"$TextSize\" />
+            <BoundPropertyStringSet Name=\"string\">"
+TextBot="
+            </BoundPropertyStringSet>
+            <BoundPropertyString Name=\"style\" Value=\"Bold\" />
+            <BoundPropertyFloat Name=\"transparency\" Value=\"0\" />
+          </BoundProperties>
+        </TextEffect>
+      </Effects>
+      <Transitions />
+      <BoundProperties>
+        <BoundPropertyFloatSet Name=\"diffuseColor\">
+          <BoundPropertyFloatElement Value=\"0.75\" />
+          <BoundPropertyFloatElement Value=\"1\" />
+          <BoundPropertyFloatElement Value=\"0\" />
+        </BoundPropertyFloatSet>
+        <BoundPropertyFloat Name=\"transparency\" Value=\"1\" />
+      </BoundProperties>
+    </TitleClip>"
 #
 # Decode incoming Morse
 cp /dev/null cwgen.decoded
 cp /dev/null cwgen.code
+cp /dev/null cwgen.TextID
 #
 # Start with header
 #
@@ -755,6 +1068,8 @@ fi
     echo -n "
   </MediaItems>
   <Extents>"
+# Generic middle code
+#
 if [[ "${CODEA[0]}" =~ ^[[:alnum:]] ]]
 then
     for i in `seq 0 $LEN`
@@ -766,6 +1081,11 @@ then
             Translate
             CODEA[$i]=`awk '{print $NF}' ./cwgen.code`
             Decode
+	    if [ $TEXT -eq 1 ]
+	    then
+                Textit
+	        GAP=-2
+	    fi
         done
         if [ $i -ne $LEN ]
         then
@@ -779,10 +1099,13 @@ else
     for i in `seq 0 $LEN`
     do
         Decode
+	if [ $TEXT -eq 1 ]
+	then
+            Textit
+	    GAP=-2
+	fi
     done
 fi
-# Generic middle code
-#
 KeyUp
 # Generate Audio extent
 #
@@ -811,8 +1134,12 @@ echo -n "
     <ExtentRefs>"
 for i in `seq 5 $extID`
 do
-    echo -n "
+    grep -w $i $HOME/cwgen.TextID > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo -n "
        <ExtentRef id=\"$i\" />"
+    fi
 done
 echo -n "
     </ExtentRefs>"
@@ -837,7 +1164,7 @@ else
 fi
 if [ $AUDIO -eq 1 ]
 then
-    ./morsewav.py/morsewav.py -o cwgen.wav -f 550 -w 12 -l 25 `cat $HOME/cwgen.decoded`
+    ./morsewav.py/morsewav.py -o cwgen.wav -f $FQ -w 12 -l 25 `cat $HOME/cwgen.decoded`
 fi
 echo -n "
     </ExtentSelector>
@@ -850,8 +1177,23 @@ echo -n "
     <ExtentSelector extentID=\"4\" gapBefore=\"0\" primaryTrack=\"false\">
       <Effects />
       <Transitions />
-      <BoundProperties />
-      <ExtentRefs />
+      <BoundProperties />"
+if [ $TEXT -eq 1 ]
+then
+    echo -n "
+      <ExtentRefs>"
+    for t in `cat $HOME/cwgen.TextID`
+    do
+        echo -n "
+            <ExtentRef id=\"$t\" />"
+    done
+    echo -n "
+      </ExtentRefs>"
+else
+    echo -n "
+      <ExtentRefs />"
+fi
+echo -n "
     </ExtentSelector>
   </Extents>
   <BoundPlaceholders>
