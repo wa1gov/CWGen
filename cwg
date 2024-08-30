@@ -26,6 +26,7 @@ usage()
     echo "    -small text size medium"
     echo "    -mid   display text on center"
     echo "    -right display text on right"
+    echo "    -purp  purple text"
     echo "    -red   red text"
     echo "    -green green text"
     echo "    -blue  blue text"
@@ -854,7 +855,7 @@ GAP=0
 CH=2 # cut characters > $SZ for text marqee 
 SZ=30
 FQ=550
-CO1=1  # Red 100, Green 010, Black 000, White 111
+CO1=1  # Red 100, Green 010, Black 000, White 111, blue 001, purple 101
 CO2=0
 CO3=0
 #
@@ -874,6 +875,13 @@ while [[ $# -gt 0 ]]
 		CO1=0
 		CO2=0
 		CO3=0
+		TEXT=1
+		shift
+		;;
+	-purp)                 #Purple Text
+		CO1=1
+		CO2=0
+		CO3=1
 		TEXT=1
 		shift
 		;;
