@@ -26,9 +26,14 @@ usage()
     echo "    -small text size medium"
     echo "    -mid   display text on center"
     echo "    -right display text on right"
+    echo "    -purp  purple text"
     echo "    -red   red text"
+    echo "    -green green text"
+    echo "    -blue  blue text"
     echo "    -white white text"
     echo "    -black black text"
+    echo "    -orange orange text"
+    echo "    -yellow yellow text"
     echo "    -low   Frequency = 360hz"
     echo "    -high  Frequency = 750hz"
     echo "    -cup   Special CW Mug settings"
@@ -118,6 +123,8 @@ Translate()
         "'") echo -n ".----. " >> cwgen.code ;;
         "/")  echo -n "-..-. " >> cwgen.code ;;
         "!")  echo -n "-.-.-- " >> cwgen.code ;;
+        "(")  echo -n "-.--. " >> cwgen.code ;;
+        ":")  echo -n "---... " >> cwgen.code ;;
         *) ;;
     esac
 }
@@ -634,6 +641,26 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "---...") echo -n ":" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+		KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		KeyUp
+		KeyDown
+		;;
         "--..--") echo -n "," >> cwgen.decoded
                 dur=3
                 KeyUp
@@ -768,6 +795,24 @@ Decode()
                 KeyUp
                 KeyDown
                 ;;
+        "-.--.") echo -n "(" >> cwgen.decoded
+                dur=3
+                KeyUp
+                KeyDown
+                dur=1
+                KeyUp
+                KeyDown
+                KeyUp
+                dur=3
+                KeyDown
+                dur=1
+                KeyUp
+		dur=3
+		KeyDown
+		dur=1
+		KeyUp
+		KeyDown
+		;;
         "-.-.--") echo -n "!" >> cwgen.decoded
                 dur=3
                 KeyUp
@@ -812,7 +857,8 @@ GAP=0
 CH=2 # cut characters > $SZ for text marqee 
 SZ=30
 FQ=550
-CO1=1  # Red 100, Green 010, Black 000, White 111
+CO1=1  # Red 100, Green 010, Black 000, White 111, blue 001, purple 101
+       # Orange 1/.5/0 Yellow 110
 CO2=0
 CO3=0
 #
@@ -835,6 +881,13 @@ while [[ $# -gt 0 ]]
 		TEXT=1
 		shift
 		;;
+	-purp)                 #Purple Text
+		CO1=1
+		CO2=0
+		CO3=1
+		TEXT=1
+		shift
+		;;
 	-red)                  #Red Text
 		CO1=1
 		CO2=0
@@ -844,6 +897,27 @@ while [[ $# -gt 0 ]]
 		;;
 	-green)                #Green Text
 		CO1=0
+		CO2=1
+		CO3=0
+		TEXT=1
+		shift
+		;;
+	 -blue)                #Blue Text
+		CO1=0
+		CO2=0
+		CO3=1
+		TEXT=1
+		shift
+		;;
+       -orange)                #Orange Text
+		CO1=1
+		CO2=.5
+		CO3=0
+		TEXT=1
+		shift
+		;;
+       -yellow)                #Yellow Text
+		CO1=1
 		CO2=1
 		CO3=0
 		TEXT=1

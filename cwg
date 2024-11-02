@@ -32,6 +32,8 @@ usage()
     echo "    -blue  blue text"
     echo "    -white white text"
     echo "    -black black text"
+    echo "    -orange orange text"
+    echo "    -yellow yellow text"
     echo "    -low   Frequency = 360hz"
     echo "    -high  Frequency = 750hz"
     echo "    -cup   Special CW Mug settings"
@@ -856,6 +858,7 @@ CH=2 # cut characters > $SZ for text marqee
 SZ=30
 FQ=550
 CO1=1  # Red 100, Green 010, Black 000, White 111, blue 001, purple 101
+       # Orange 1/.5/0 Yellow 110
 CO2=0
 CO3=0
 #
@@ -903,6 +906,20 @@ while [[ $# -gt 0 ]]
 		CO1=0
 		CO2=0
 		CO3=1
+		TEXT=1
+		shift
+		;;
+       -orange)                #Orange Text
+		CO1=1
+		CO2=.5
+		CO3=0
+		TEXT=1
+		shift
+		;;
+       -yellow)                #Yellow Text
+		CO1=1
+		CO2=1
+		CO3=0
 		TEXT=1
 		shift
 		;;
