@@ -30,11 +30,12 @@ usage()
     echo "    -red   red text"
     echo "    -green green text"
     echo "    -blue  blue text"
+    echo "    -cyan  cyan text"
     echo "    -white white text"
     echo "    -black black text"
     echo "    -orange orange text"
     echo "    -yellow yellow text"
-    echo "    -low   Frequency = 360hz"
+    echo "    -low   Frequency = 275hz"
     echo "    -high  Frequency = 750hz"
     echo "    -cup   Special CW Mug settings"
     echo "    -h     display this help"
@@ -857,7 +858,7 @@ GAP=0
 CH=2 # cut characters > $SZ for text marqee 
 SZ=30
 FQ=550
-CO1=1  # Red 100, Green 010, Black 000, White 111, blue 001, purple 101
+CO1=1  # Red 100, Green 010, Black 000, White 111, cyan 011, blue 001, purple 101
        # Orange 1/.5/0 Yellow 110
 CO2=0
 CO3=0
@@ -905,6 +906,13 @@ while [[ $# -gt 0 ]]
 	 -blue)                #Blue Text
 		CO1=0
 		CO2=0
+		CO3=1
+		TEXT=1
+		shift
+		;;
+	 -cyan)                #Cyan Text
+		CO1=0
+		CO2=1
 		CO3=1
 		TEXT=1
 		shift
@@ -976,8 +984,8 @@ while [[ $# -gt 0 ]]
                 TEXT=1
                 shift
                 ;;
-        -low)                  #Frequency = 360hz
-                FQ=360
+        -low)                  #Frequency = 275hz
+                FQ=275
                 shift
                 ;;
         -high)                  #Frequency = 750hz
@@ -1011,6 +1019,8 @@ dur=1
 if [ -d ./morsewav.py ]
 then
     AUDIO=1
+else
+    AUDIO=0
 fi
 Ibod="
       <Effects />
